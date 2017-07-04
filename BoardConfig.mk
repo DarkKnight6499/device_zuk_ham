@@ -83,22 +83,13 @@ TARGET_USE_COMPAT_GRALLOC_ALIGN := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
 
 # CM Hardware
-BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/cmhw
+#BOARD_HARDWARE_CLASS += $(DEVICE_PATH)/cmhw
 
 # DT2W
 TARGET_TAP_TO_WAKE_NODE := "/sys/devices/virtual/touch/tp_dev/gesture_on"
 
 # ENCRYPTION
 TARGET_HW_DISK_ENCRYPTION := true
-
-# Enable dexpreopt to speed boot time
-ifeq ($(HOST_OS),linux)
-  ifeq ($(call match-word-in-list,$(TARGET_BUILD_VARIANT),user),true)
-    ifeq ($(WITH_DEXPREOPT_BOOT_IMG_ONLY),)
-      WITH_DEXPREOPT_BOOT_IMG_ONLY := true
-    endif
-  endif
-endif
 
 # Filesystem
 BOARD_BOOTIMAGE_PARTITION_SIZE          := 20971520
@@ -145,8 +136,8 @@ TARGET_PROVIDES_LIBLIGHT := true
 TARGET_USES_MEDIA_EXTENSIONS := true
 
 # QCOM/CM HARDWARE
-BOARD_USES_QCOM_HARDWARE     := true
-BOARD_USES_CYANOGEN_HARDWARE := true
+#BOARD_USES_QCOM_HARDWARE     := true
+#BOARD_USES_CYANOGEN_HARDWARE := true
 
 # QCOM Power HAL
 TARGET_POWERHAL_VARIANT := qcom
@@ -194,10 +185,15 @@ ifneq ($(QCPATH),)
 endif
 
 # SELinux policies
-include device/qcom/sepolicy/sepolicy.mk
+#include device/qcom/sepolicy/sepolicy.mk
 
 # QCOM sepolicy
 BOARD_SEPOLICY_DIRS += \
     $(DEVICE_PATH)/sepolicy
 
 -include vendor/zuk/ham/BoardConfigVendor.mk
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.adb.secure=1
+endif
